@@ -1,7 +1,7 @@
 (in-package :zmq)
 
 (define-foreign-library libzmq
-  (t (:default "libzmq")))
+  (t (:or "libzmq.so.3" "libzmq.so.2" "libzmq")))
 
 (use-foreign-library libzmq)
 
