@@ -83,7 +83,7 @@ function is returned."
   "Define a function which is only available in ZeroMQ 3.2. Using the function
 with ZeroMQ 2.x will raise an error."
   (cond
-    (#.(eql zmq-version-major 3)
+    (#.(>= zmq-version-major 3)
        `(defun ,name (,@args)
           ,@body))
     (#.(eql zmq-version-major 2)
@@ -228,7 +228,7 @@ SOCKET."
      (define-sockopt-type :reconnect-ivl :int)
      (define-sockopt-type :backlog :int)
      (define-sockopt-type :reconnect-ivl-max :int))
-  (#.(eql zmq-version-major 3)
+  (#.(>= zmq-version-major 3)
      (define-sockopt-type :affinity :uint64)
      (define-sockopt-type :subscribe :char)
      (define-sockopt-type :unsubscribe :char)
@@ -462,7 +462,7 @@ the call, SOURCE is an empty message."
     (let ((function (cond
                       (#.(eql zmq-version-major 2)
                          '%send)
-                      (#.(eql zmq-version-major 3)
+                      (#.(>= zmq-version-major 3)
                          '%sendmsg))))
       (call-ffi -1 function (socket-%socket socket) message
                 (foreign-bitfield-value 'send-options flags)))))
@@ -473,7 +473,7 @@ the call, SOURCE is an empty message."
     (let ((function (cond
                       (#.(eql zmq-version-major 2)
                          '%recv)
-                      (#.(eql zmq-version-major 3)
+                      (#.(>= zmq-version-major 3)
                          '%recvmsg))))
       (call-ffi -1 function (socket-%socket socket) message
                 (foreign-bitfield-value 'recv-options flags)))))

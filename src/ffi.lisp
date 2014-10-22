@@ -1,7 +1,7 @@
 (in-package :zmq)
 
 (define-foreign-library libzmq
-  (t (:or "libzmq.so.3" "libzmq.so.2" "libzmq")))
+  (t (:default "libzmq")))
 
 (use-foreign-library libzmq)
 
@@ -17,7 +17,7 @@
   (socket socket)
   (endpoint :string))
 
-(when #.(eql zmq-version-major 3)
+(when #.(>= zmq-version-major 3)
       (defcfun (%unbind "zmq_unbind") :int
         (socket socket)
         (endpoint :string)))
@@ -29,8 +29,8 @@
   (socket socket)
   (endpoint :string))
 
-(when #.(eql zmq-version-major 3)
-      (defcfun (%disconnect "zmq_disconnect") :int
+(when #.(>= zmq-version-major 3)
+      (defcfun (%unbind "zmq_disconnect") :int
         (socket socket)
         (endpoint :string)))
 
@@ -48,7 +48,7 @@
 (defcfun (%term "zmq_term") :int
   (context context))
 
-(when #.(eql zmq-version-major 3)
+(when #.(>= zmq-version-major 3)
       (defcfun (%ctx-new "zmq_ctx_new") context)
 
       (defcfun (%ctx-destroy "zmq_ctx_destroy") :int
@@ -94,7 +94,7 @@
 (defcfun (%msg-size "zmq_msg_size") size-t
   (msg (:pointer (:struct msg))))
 
-(when #.(eql zmq-version-major 3)
+(when #.(>= zmq-version-major 3)
       (defcfun (%recvmsg "zmq_recvmsg") :int
         (socket socket)
         (msg (:pointer (:struct msg)))
@@ -153,7 +153,7 @@
   (backend socket))
 
 ; 3.x
-(when #.(eql zmq-version-major 3)
+(when #.(>= zmq-version-major 3)
   (defcfun (%proxy "zmq_proxy") :int
     (frontend socket)
     (backend socket)
